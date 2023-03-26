@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pages/currency_page.dart';
+import 'pages/home_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
         //useMaterial3: true,
       ),
-      home: const CurrencyPage(),
+      home: const HomePage(),
     );
   }
 }
