@@ -1,7 +1,7 @@
-import 'package:crypto/repositories/bookmarks_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../repositories/bookmarks_repository.dart';
 import '../widgets/currency_card.dart';
 
 class BookmarksPage extends StatefulWidget {

@@ -1,8 +1,8 @@
-import 'package:crypto/configs/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../configs/app_settings.dart';
 import '../models/currency.dart';
 import '../repositories/bookmarks_repository.dart';
 import '../repositories/currency_repository.dart';
@@ -130,7 +130,7 @@ class _CurrencyPageState extends State<CurrencyPage> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (bookmarks.list.contains(table[currency]))
+                if (bookmarks.list.any((fav) => fav.acronym == table[currency].acronym))
                   const Icon(
                     Icons.star,
                     color: Colors.amber,

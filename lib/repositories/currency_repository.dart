@@ -1,4 +1,4 @@
-import 'package:crypto/models/currency.dart';
+import '../models/currency.dart';
 
 class CurrencyRepository {
   static List<Currency> table = [

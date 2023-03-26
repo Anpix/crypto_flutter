@@ -1,9 +1,9 @@
-import 'package:crypto/pages/currency_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/currency.dart';
+import '../pages/currency_details_page.dart';
 import '../repositories/bookmarks_repository.dart';
 
 class CurrencyCard extends StatefulWidget {
