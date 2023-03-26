@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'bookmarks_page.dart';
 import 'currency_page.dart';
+import 'settings_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,6 +36,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           const CurrencyPage(),
           BookmarksPage(),
+          SettingsPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -42,6 +44,7 @@ class _HomePageState extends State<HomePage> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'All'),
           BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Bookmarks'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Account'),
         ],
         onTap: (page) {
           pc.animateToPage(

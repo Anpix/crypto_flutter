@@ -1,3 +1,4 @@
+import 'package:crypto_app/repositories/account_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,8 +15,9 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ListenableProvider<BookmarksRepository>(create: (_) => BookmarksRepository()),
-        ListenableProvider<AppSettings>(create: (_) => AppSettings()),
+        ChangeNotifierProvider(create: (_) => AccountRepository()),
+        ChangeNotifierProvider<BookmarksRepository>(create: (_) => BookmarksRepository()),
+        ChangeNotifierProvider<AppSettings>(create: (_) => AppSettings()),
       ],
       child: const MyApp(),
     ),
