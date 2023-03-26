@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'pages/currency_page.dart';
 import 'pages/home_page.dart';
 
 class MyApp extends StatelessWidget {
@@ -13,9 +14,9 @@ class MyApp extends StatelessWidget {
       //debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.indigo,
-        useMaterial3: true,
+        //useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const CurrencyPage(),
     );
   }
 }
