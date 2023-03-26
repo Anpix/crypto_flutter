@@ -16,13 +16,38 @@ class _CurrencyPageState extends State<CurrencyPage> {
   NumberFormat real = NumberFormat.currency(locale: 'pt_BR', name: 'R\$');
   List<Currency> selected = [];
 
+  dynamicAppBar() {
+    if (selected.isEmpty) {
+      return AppBar(
+        title: const Center(child: Text('Crypto Currencies')),
+      );
+    } else {
+      return AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.cancel),
+          onPressed: () {
+            setState(() {
+              selected = [];
+            });
+          },
+        ),
+        title: Text('${selected.length} selected'),
+        backgroundColor: Colors.blueGrey[50],
+        elevation: 1,
+        iconTheme: const IconThemeData(color: Colors.black87),
+        titleTextStyle: const TextStyle(
+          color: Colors.black87,
+          fontSize: 20,
+          fontWeight: FontWeight.bold
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text('Crypto Currencies')),
-      ),
+      appBar: dynamicAppBar(),
       body: ListView.separated(
         itemBuilder: (BuildContext context, int currency) {
           return ListTile(
@@ -30,13 +55,13 @@ class _CurrencyPageState extends State<CurrencyPage> {
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             leading: (selected.contains(table[currency]))
-              ? const CircleAvatar(
-                child: Icon(Icons.check),
-              )
-              : SizedBox(
-                width: 40,
-                child: Image.asset(table[currency].icon),
-              ),
+                ? const CircleAvatar(
+                    child: Icon(Icons.check),
+                  )
+                : SizedBox(
+                    width: 40,
+                    child: Image.asset(table[currency].icon),
+                  ),
             title: Text(
               table[currency].name,
               style: const TextStyle(
@@ -49,9 +74,7 @@ class _CurrencyPageState extends State<CurrencyPage> {
             selectedTileColor: Colors.indigo[50],
             onLongPress: () {
               setState(() {
-                (selected.contains(table[currency]))
-                  ? selected.remove(table[currency])
-                  : selected.add(table[currency]);
+                (selected.contains(table[currency])) ? selected.remove(table[currency]) : selected.add(table[currency]);
                 debugPrint('Pressionou');
               });
             },
@@ -60,6 +83,18 @@ class _CurrencyPageState extends State<CurrencyPage> {
         padding: const EdgeInsets.all(16),
         separatorBuilder: (_, __) => Divider(),
         itemCount: table.length,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        icon: const Icon(Icons.star),
+        label: const Text(
+          'FAVORITAR',
+          style: TextStyle(
+            letterSpacing: 0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
