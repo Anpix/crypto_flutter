@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../models/currency.dart';
 import '../repositories/currency_repository.dart';
+import 'currency_details_page.dart';
 
 class CurrencyPage extends StatefulWidget {
   const CurrencyPage({Key? key}) : super(key: key);
@@ -44,6 +45,21 @@ class _CurrencyPageState extends State<CurrencyPage> {
     }
   }
 
+  showDetails(Currency currency) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CurrencyDetailsPage(currency: currency),
+      )
+    );
+  }
+
+  onLongPress(Currency currency) {
+    setState(() {
+      (selected.contains(currency)) ? selected.remove(currency) : selected.add(currency);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,16 +88,12 @@ class _CurrencyPageState extends State<CurrencyPage> {
             trailing: Text(real.format(table[currency].price)),
             selected: selected.contains(table[currency]),
             selectedTileColor: Colors.indigo[50],
-            onLongPress: () {
-              setState(() {
-                (selected.contains(table[currency])) ? selected.remove(table[currency]) : selected.add(table[currency]);
-                debugPrint('Pressionou');
-              });
-            },
+            onLongPress: () => onLongPress(table[currency]),
+            onTap: () => showDetails(table[currency]),
           );
         },
         padding: const EdgeInsets.all(16),
-        separatorBuilder: (_, __) => Divider(),
+        separatorBuilder: (_, __) => const Divider(),
         itemCount: table.length,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
