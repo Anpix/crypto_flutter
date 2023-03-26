@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../models/currency.dart';
+import '../repositories/bookmarks_repository.dart';
 import '../repositories/currency_repository.dart';
 import 'currency_details_page.dart';
 
@@ -16,6 +18,7 @@ class _CurrencyPageState extends State<CurrencyPage> {
   final table = CurrencyRepository.table;
   NumberFormat real = NumberFormat.currency(locale: 'pt_BR', name: 'R\$');
   List<Currency> selected = [];
+  late BookmarksRepository bookmarks;
 
   dynamicAppBar() {
     if (selected.isEmpty) {
@@ -36,22 +39,28 @@ class _CurrencyPageState extends State<CurrencyPage> {
         backgroundColor: Colors.blueGrey[50],
         elevation: 1,
         iconTheme: const IconThemeData(color: Colors.black87),
-        titleTextStyle: const TextStyle(
-          color: Colors.black87,
-          fontSize: 20,
-          fontWeight: FontWeight.bold
-        ),
+        titleTextStyle: const TextStyle(color: Colors.black87, fontSize: 20, fontWeight: FontWeight.bold),
       );
     }
   }
 
   showDetails(Currency currency) {
     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => CurrencyDetailsPage(currency: currency),
-      )
-    );
+        context,
+        MaterialPageRoute(
+          builder: (_) => CurrencyDetailsPage(currency: currency),
+        ));
+  }
+
+  clearSelected() {
+    setState(() {
+      selected = [];
+    });
+  }
+
+  onPressed() {
+    bookmarks.saveAll(selected);
+    clearSelected();
   }
 
   onLongPress(Currency currency) {
@@ -62,6 +71,9 @@ class _CurrencyPageState extends State<CurrencyPage> {
 
   @override
   Widget build(BuildContext context) {
+    bookmarks = context.watch<BookmarksRepository>();
+    //bookmarks = Provider.of<BookmarksRepository>(context);
+
     return Scaffold(
       appBar: dynamicAppBar(),
       body: ListView.separated(
@@ -78,14 +90,26 @@ class _CurrencyPageState extends State<CurrencyPage> {
                     width: 40,
                     child: Image.asset(table[currency].icon),
                   ),
-            title: Text(
-              table[currency].name,
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-              ),
+            title: Row(
+              children: [
+                Text(
+                  table[currency].name,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (bookmarks.list.contains(table[currency])) const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 15,
+                ),
+              ],
             ),
-            trailing: Text(real.format(table[currency].price)),
+            trailing: Text(
+              real.format(table[currency].price),
+              style: const TextStyle(fontSize: 15),
+            ),
             selected: selected.contains(table[currency]),
             selectedTileColor: Colors.indigo[50],
             onLongPress: () => onLongPress(table[currency]),
@@ -97,17 +121,19 @@ class _CurrencyPageState extends State<CurrencyPage> {
         itemCount: table.length,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        icon: const Icon(Icons.star),
-        label: const Text(
-          'FAVORITAR',
-          style: TextStyle(
-            letterSpacing: 0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      floatingActionButton: selected.isNotEmpty
+        ? FloatingActionButton.extended(
+            onPressed: onPressed,
+            icon: const Icon(Icons.star),
+            label: const Text(
+              'FAVORITAR',
+              style: TextStyle(
+                letterSpacing: 0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        : null,
     );
   }
 }
