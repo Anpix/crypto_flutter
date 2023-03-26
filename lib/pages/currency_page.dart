@@ -1,3 +1,4 @@
+import 'package:crypto/configs/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -16,14 +17,43 @@ class CurrencyPage extends StatefulWidget {
 
 class _CurrencyPageState extends State<CurrencyPage> {
   final table = CurrencyRepository.table;
-  NumberFormat real = NumberFormat.currency(locale: 'pt_BR', name: 'R\$');
+  late NumberFormat real;
+  late Map<String, String> loc;
   List<Currency> selected = [];
   late BookmarksRepository bookmarks;
+
+  readNumberFormat() {
+    loc = context.watch<AppSettings>().locale;
+    real = NumberFormat.currency(locale: loc['locale'], name: loc['name']);
+  }
+
+  changeLanguageButton() {
+    final locale = loc['locale'] == 'pt_BR' ? 'en_US' : 'pt_BR';
+    final name = loc['locale'] == 'pt_BR' ? '\$' : 'R\$';
+
+    return PopupMenuButton(
+      icon: const Icon(Icons.language),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+            child: ListTile(
+          leading: const Icon(Icons.swap_vert),
+          title: Text('Use $locale'),
+          onTap: () {
+            context.read<AppSettings>().setLocale(locale, name);
+            Navigator.pop(context);
+          },
+        ))
+      ],
+    );
+  }
 
   dynamicAppBar() {
     if (selected.isEmpty) {
       return AppBar(
         title: const Center(child: Text('Crypto Currencies')),
+        actions: [
+          changeLanguageButton(),
+        ],
       );
     } else {
       return AppBar(
@@ -71,8 +101,9 @@ class _CurrencyPageState extends State<CurrencyPage> {
 
   @override
   Widget build(BuildContext context) {
-    bookmarks = context.watch<BookmarksRepository>();
     //bookmarks = Provider.of<BookmarksRepository>(context);
+    bookmarks = context.watch<BookmarksRepository>();
+    readNumberFormat();
 
     return Scaffold(
       appBar: dynamicAppBar(),
@@ -99,11 +130,12 @@ class _CurrencyPageState extends State<CurrencyPage> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (bookmarks.list.contains(table[currency])) const Icon(
+                if (bookmarks.list.contains(table[currency]))
+                  const Icon(
                     Icons.star,
                     color: Colors.amber,
                     size: 15,
-                ),
+                  ),
               ],
             ),
             trailing: Text(
@@ -122,18 +154,18 @@ class _CurrencyPageState extends State<CurrencyPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: selected.isNotEmpty
-        ? FloatingActionButton.extended(
-            onPressed: onPressed,
-            icon: const Icon(Icons.star),
-            label: const Text(
-              'FAVORITAR',
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.bold,
+          ? FloatingActionButton.extended(
+              onPressed: onPressed,
+              icon: const Icon(Icons.star),
+              label: const Text(
+                'FAVORITAR',
+                style: TextStyle(
+                  letterSpacing: 0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          )
-        : null,
+            )
+          : null,
     );
   }
 }
