@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'bookmarks_page.dart';
 import 'currency_page.dart';
 import 'settings_page.dart';
+import 'wallet_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,17 +34,20 @@ class _HomePageState extends State<HomePage> {
       body: PageView(
         controller: pc,
         onPageChanged: setCurrentPage,
-        children: [
-          const CurrencyPage(),
+        children: const [
+          CurrencyPage(),
           BookmarksPage(),
+          WalletPage(),
           SettingsPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentPage,
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'All'),
           BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Bookmarks'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Wallet'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Account'),
         ],
         onTap: (page) {

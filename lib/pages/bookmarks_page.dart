@@ -5,7 +5,7 @@ import '../repositories/bookmarks_repository.dart';
 import '../widgets/currency_card.dart';
 
 class BookmarksPage extends StatefulWidget {
-  BookmarksPage({Key? key}) : super(key: key);
+  const BookmarksPage({Key? key}) : super(key: key);
 
   @override
   State<BookmarksPage> createState() => _BookmarksPageState();

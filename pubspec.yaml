@@ -19,6 +19,7 @@ dependencies:
   hive_flutter: ^1.1.0
   path_provider: ^2.0.14
   sqflite: ^2.2.6
+  fl_chart: ^0.61.0
 
 dev_dependencies:
   flutter_test:

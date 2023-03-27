@@ -5,9 +5,9 @@ import 'package:intl/intl.dart';
 import '../models/currency.dart';
 
 class CurrencyDetailsPage extends StatefulWidget {
-  CurrencyDetailsPage({Key? key, required this.currency}) : super(key: key);
+  const CurrencyDetailsPage({Key? key, required this.currency}) : super(key: key);
 
-  Currency currency;
+  final Currency currency;
 
   @override
   State<CurrencyDetailsPage> createState() => _CurrencyDetailsPage();

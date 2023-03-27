@@ -7,10 +7,10 @@ import '../configs/app_settings.dart';
 import '../repositories/account_repository.dart';
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
@@ -29,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
         child: Column(
           children: [
             ListTile(
-              title: const Text('Saldo'),
+              title: const Text('Balance'),
               subtitle: Text(
                 real.format(account.balance),
                 style: const TextStyle(fontSize: 25, color: Colors.indigo),
