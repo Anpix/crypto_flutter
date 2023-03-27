@@ -1,6 +1,8 @@
+import 'package:crypto_app/repositories/account_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../models/currency.dart';
 
@@ -18,10 +20,11 @@ class _CurrencyDetailsPage extends State<CurrencyDetailsPage> {
   final _form = GlobalKey<FormState>();
   final _value = TextEditingController();
   double ammount = 0;
+  late AccountRepository account;
 
-  reserve() {
+  reserve() async {
     if (_form.currentState!.validate()) {
-      //save
+      await account.reserve(widget.currency, double.parse(_value.text));
 
       Navigator.pop(context);
 
@@ -33,6 +36,9 @@ class _CurrencyDetailsPage extends State<CurrencyDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    //readNumberFormat();
+    account = context.watch<AccountRepository>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.currency.name),
@@ -105,7 +111,9 @@ class _CurrencyDetailsPage extends State<CurrencyDetailsPage> {
                   if (value!.isEmpty) {
                     return 'Inform the value';
                   } else if (double.parse(value) < 50) {
-                    return 'Compra mínima de R\$ 50,00';
+                    return 'Minimun value to reserve is R\$ 50,00';
+                  } else if (double.parse(value) > account.balance) {
+                    return 'Your balance value is less than the value informed';
                   }
                   return null;
                 },

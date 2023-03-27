@@ -51,12 +51,12 @@ class _WalletPageState extends State<WalletPage> {
               real.format(walletTotal),
               style: const TextStyle(
                 fontSize: 35,
-                fontWeight:
-                FontWeight.w700,
+                fontWeight: FontWeight.w700,
                 letterSpacing: -1.5,
               ),
             ),
             loadChart(),
+            loadTransactions(),
           ],
         ),
       ),
@@ -88,7 +88,8 @@ class _WalletPageState extends State<WalletPage> {
             children: [
               AspectRatio(
                 aspectRatio: 1,
-                child: PieChart(PieChartData(
+                child: PieChart(
+                  PieChartData(
                     sectionsSpace: 5,
                     centerSpaceRadius: 110,
                     sections: loadWallet(),
@@ -152,11 +153,11 @@ class _WalletPageState extends State<WalletPage> {
   }
 
   void touchCallback(FlTouchEvent touch, PieTouchResponse? response) => setState(() {
-    if(response != null) {
-      index = response.touchedSection!.touchedSectionIndex;
-      setChartData(index);
-    }
-  });
+        if (response != null) {
+          index = response.touchedSection!.touchedSectionIndex;
+          setChartData(index);
+        }
+      });
 
   setChartData(int index) {
     if (index < 0) return;
@@ -168,5 +169,22 @@ class _WalletPageState extends State<WalletPage> {
       chartLabel = wallet[index].currency.name;
       chartValue = wallet[index].currency.price * wallet[index].amount;
     }
+  }
+
+  loadTransactions() {
+    final transactions = account.transactions;
+    final date = DateFormat('dd/MM/yyy - hh:mm');
+    List<Widget> widgets = [];
+
+    for (var operation in transactions) {
+      widgets.add(ListTile(
+        title: Text(operation.currency.name),
+        subtitle: Text(date.format(operation.operationDate)),
+        trailing: Text(real.format((operation.currency.price * operation.amount))),
+      ));
+      widgets.add(const Divider());
+    }
+
+    return Column(children: widgets);
   }
 }
