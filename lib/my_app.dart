@@ -1,3 +1,4 @@
+import 'package:crypto_app/widgets/auth_check.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/home_page.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
         //useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: AuthCheck(),
     );
   }
 }

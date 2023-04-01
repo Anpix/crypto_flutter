@@ -1,3 +1,4 @@
+import 'package:crypto_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +41,27 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const Divider(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: OutlinedButton(
+                onPressed: () => context.read<AuthService>().logout(),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.red,
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
