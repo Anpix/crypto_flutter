@@ -85,21 +85,21 @@ class AccountRepository extends ChangeNotifier {
   _getWallet() async {
     _wallet = [];
     List positions = await db.query('wallet');
-    positions.forEach((element) {
+    for (var element in positions) {
       Currency currency = CurrencyRepository.table.firstWhere((c) => c.acronym == element['acronym']);
 
       _wallet.add(Position(
         currency: currency,
         amount: double.parse(element['amount']),
       ));
-    });
+    }
     notifyListeners();
   }
 
   _getTransactions() async {
     _transactions = [];
     List operations = await db.query('history');
-    operations.forEach((element) {
+    for (var element in operations) {
       Currency currency = CurrencyRepository.table.firstWhere((c) => c.acronym == element['acronym']);
 
       _transactions.add(
@@ -111,7 +111,7 @@ class AccountRepository extends ChangeNotifier {
           amount: double.parse(element['amount']),
         ),
       );
-    });
+    }
     notifyListeners();
   }
 }

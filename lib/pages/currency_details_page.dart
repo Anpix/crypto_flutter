@@ -23,12 +23,14 @@ class _CurrencyDetailsPage extends State<CurrencyDetailsPage> {
   late AccountRepository account;
 
   reserve() async {
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     if (_form.currentState!.validate()) {
       await account.reserve(widget.currency, double.parse(_value.text));
 
-      Navigator.pop(context);
+      navigator.pop();
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         const SnackBar(content: Text('The money was reserved successfully!')),
       );
     }

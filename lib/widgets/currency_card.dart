@@ -7,12 +7,12 @@ import '../pages/currency_details_page.dart';
 import '../repositories/bookmarks_repository.dart';
 
 class CurrencyCard extends StatefulWidget {
-  Currency currency;
+  final Currency currency;
 
-  CurrencyCard({Key? key, required this.currency}) : super(key: key);
+  const CurrencyCard({Key? key, required this.currency}) : super(key: key);
 
   @override
-  _CurrencyCardState createState() => _CurrencyCardState();
+  State<CurrencyCard> createState() => _CurrencyCardState();
 }
 
 class _CurrencyCardState extends State<CurrencyCard> {
@@ -40,7 +40,7 @@ class _CurrencyCardState extends State<CurrencyCard> {
       child: InkWell(
         onTap: () => openDetails(),
         child: Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 20, left: 20),
+          padding: const EdgeInsets.only(top: 20, bottom: 20, left: 20),
           child: Row(
             children: [
               Image.asset(
@@ -49,7 +49,7 @@ class _CurrencyCardState extends State<CurrencyCard> {
               ),
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(left: 12),
+                  margin: const EdgeInsets.only(left: 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
