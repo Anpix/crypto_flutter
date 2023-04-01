@@ -24,7 +24,9 @@ void main() async {
       providers: [
         ChangeNotifierProvider<AuthService>(create: (_) => AuthService()),
         ChangeNotifierProvider<AccountRepository>(create: (_) => AccountRepository()),
-        ChangeNotifierProvider<BookmarksRepository>(create: (_) => BookmarksRepository()),
+        ChangeNotifierProvider<BookmarksRepository>(create: (_) => BookmarksRepository(
+          auth: _.read<AuthService>(),
+        )),
         ChangeNotifierProvider<AppSettings>(create: (_) => AppSettings()),
       ],
       child: const MyApp(),
