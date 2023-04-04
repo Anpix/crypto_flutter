@@ -16,11 +16,12 @@ class CurrencyPage extends StatefulWidget {
 }
 
 class _CurrencyPageState extends State<CurrencyPage> {
-  final table = CurrencyRepository.table;
+  List<Currency> table = [];
   late NumberFormat real;
   late Map<String, String> loc;
   List<Currency> selected = [];
-  late BookmarksRepository bookmarks;
+  late BookmarksRepository bookmarkRepository;
+  late CurrencyRepository currencyRepository;
 
   readNumberFormat() {
     loc = context.watch<AppSettings>().locale;
@@ -89,7 +90,7 @@ class _CurrencyPageState extends State<CurrencyPage> {
   }
 
   onPressed() {
-    bookmarks.saveAll(selected);
+    bookmarkRepository.saveAll(selected);
     clearSelected();
   }
 
@@ -102,55 +103,64 @@ class _CurrencyPageState extends State<CurrencyPage> {
   @override
   Widget build(BuildContext context) {
     //bookmarks = Provider.of<BookmarksRepository>(context);
-    bookmarks = context.watch<BookmarksRepository>();
+    bookmarkRepository = context.watch<BookmarksRepository>();
+    currencyRepository = context.watch<CurrencyRepository>();
+    for (var element in currencyRepository.table) {
+      if (element != null) {
+        table.add(element);
+      }
+    }
     readNumberFormat();
 
     return Scaffold(
       appBar: dynamicAppBar(),
-      body: ListView.separated(
-        itemBuilder: (BuildContext context, int currency) {
-          return ListTile(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-            ),
-            leading: (selected.contains(table[currency]))
-                ? const CircleAvatar(
-                    child: Icon(Icons.check),
-                  )
-                : SizedBox(
-                    width: 40,
-                    child: Image.asset(table[currency].icon),
+      body: RefreshIndicator(
+        onRefresh: () => currencyRepository.checkPrices(),
+        child: ListView.separated(
+          itemBuilder: (BuildContext context, int currency) {
+            return ListTile(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+              leading: (selected.contains(table[currency]))
+                  ? const CircleAvatar(
+                      child: Icon(Icons.check),
+                    )
+                  : SizedBox(
+                      width: 40,
+                      child: Image.network(table[currency].icon),
+                    ),
+              title: Row(
+                children: [
+                  Text(
+                    table[currency].name,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-            title: Row(
-              children: [
-                Text(
-                  table[currency].name,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                if (bookmarks.list.any((fav) => fav.acronym == table[currency].acronym))
-                  const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 15,
-                  ),
-              ],
-            ),
-            trailing: Text(
-              real.format(table[currency].price),
-              style: const TextStyle(fontSize: 15),
-            ),
-            selected: selected.contains(table[currency]),
-            selectedTileColor: Colors.indigo[50],
-            onLongPress: () => onLongPress(table[currency]),
-            onTap: () => showDetails(table[currency]),
-          );
-        },
-        padding: const EdgeInsets.all(16),
-        separatorBuilder: (_, __) => const Divider(),
-        itemCount: table.length,
+                  if (bookmarkRepository.list.any((fav) => fav.acronym == table[currency].acronym))
+                    const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                      size: 15,
+                    ),
+                ],
+              ),
+              trailing: Text(
+                real.format(table[currency].price),
+                style: const TextStyle(fontSize: 15),
+              ),
+              selected: selected.contains(table[currency]),
+              selectedTileColor: Colors.indigo[50],
+              onLongPress: () => onLongPress(table[currency]),
+              onTap: () => showDetails(table[currency]),
+            );
+          },
+          padding: const EdgeInsets.all(16),
+          separatorBuilder: (_, __) => const Divider(),
+          itemCount: table.length,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: selected.isNotEmpty

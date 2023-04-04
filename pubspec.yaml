@@ -25,6 +25,8 @@ dependencies:
   path: any
   sqflite: ^2.2.6
   fl_chart: ^0.61.0
+  http: ^0.13.5
+  collection: ^1.17.1
   
 
 dev_dependencies:

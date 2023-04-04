@@ -2,6 +2,7 @@ import 'package:crypto_app/models/currency.dart';
 import 'package:crypto_app/repositories/currency_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:collection/collection.dart'; 
 
 import '../database/db.dart';
 import '../models/history.dart';
@@ -12,12 +13,13 @@ class AccountRepository extends ChangeNotifier {
   List<Position> _wallet = [];
   List<History> _transactions = [];
   double _balance = 0;
+  CurrencyRepository currencyRepository;
 
   get balance => _balance;
   List<Position> get wallet => _wallet;
   List<History> get transactions => _transactions;
 
-  AccountRepository() {
+  AccountRepository({required this.currencyRepository}) {
     _initRepository();
   }
 
@@ -86,7 +88,11 @@ class AccountRepository extends ChangeNotifier {
     _wallet = [];
     List positions = await db.query('wallet');
     for (var element in positions) {
-      Currency currency = CurrencyRepository.table.firstWhere((c) => c.acronym == element['acronym']);
+      Currency? currency = currencyRepository.table.firstWhereOrNull((c) => c.acronym == element['acronym']);
+
+      if (currency == null) {
+        continue;
+      }
 
       _wallet.add(Position(
         currency: currency,
@@ -100,7 +106,11 @@ class AccountRepository extends ChangeNotifier {
     _transactions = [];
     List operations = await db.query('history');
     for (var element in operations) {
-      Currency currency = CurrencyRepository.table.firstWhere((c) => c.acronym == element['acronym']);
+      Currency? currency = currencyRepository.table.firstWhereOrNull((c) => c.acronym == element['acronym']);
+
+      if (currency == null) {
+        continue;
+      }
 
       _transactions.add(
         History(

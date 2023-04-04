@@ -1,10 +1,10 @@
-import 'package:crypto_app/repositories/account_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/currency.dart';
+import '../repositories/account_repository.dart';
 
 class CurrencyDetailsPage extends StatefulWidget {
   const CurrencyDetailsPage({Key? key, required this.currency}) : super(key: key);
@@ -20,13 +20,13 @@ class _CurrencyDetailsPage extends State<CurrencyDetailsPage> {
   final _form = GlobalKey<FormState>();
   final _value = TextEditingController();
   double ammount = 0;
-  late AccountRepository account;
+  late AccountRepository accountRepository;
 
   reserve() async {
     final navigator = Navigator.of(context);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     if (_form.currentState!.validate()) {
-      await account.reserve(widget.currency, double.parse(_value.text));
+      await accountRepository.reserve(widget.currency, double.parse(_value.text));
 
       navigator.pop();
 
@@ -39,7 +39,7 @@ class _CurrencyDetailsPage extends State<CurrencyDetailsPage> {
   @override
   Widget build(BuildContext context) {
     //readNumberFormat();
-    account = context.watch<AccountRepository>();
+    accountRepository = context.watch<AccountRepository>();
 
     return Scaffold(
       appBar: AppBar(
@@ -56,10 +56,7 @@ class _CurrencyDetailsPage extends State<CurrencyDetailsPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    width: 50,
-                    child: Image.asset(widget.currency.icon),
-                  ),
+                  Image.network(widget.currency.icon, scale: 2.5,),
                   Container(width: 10),
                   Text(
                     real.format(widget.currency.price),
@@ -114,7 +111,7 @@ class _CurrencyDetailsPage extends State<CurrencyDetailsPage> {
                     return 'Inform the value';
                   } else if (double.parse(value) < 50) {
                     return 'Minimun value to reserve is R\$ 50,00';
-                  } else if (double.parse(value) > account.balance) {
+                  } else if (double.parse(value) > accountRepository.balance) {
                     return 'Your balance value is less than the value informed';
                   }
                   return null;

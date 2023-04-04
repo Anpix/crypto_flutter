@@ -1,6 +1,5 @@
-import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:crypto_app/database/db_firestore.dart';
 import 'package:crypto_app/repositories/currency_repository.dart';
 import 'package:crypto_app/services/auth_service.dart';
@@ -12,8 +11,9 @@ class BookmarksRepository extends ChangeNotifier {
   final List<Currency> _list = [];
   late FirebaseFirestore db;
   late AuthService auth;
+  CurrencyRepository currencyRepository;
 
-  BookmarksRepository({required this.auth}) {
+  BookmarksRepository({required this.auth, required this.currencyRepository}) {
     _startRepository();
   }
 
@@ -33,7 +33,12 @@ class BookmarksRepository extends ChangeNotifier {
       final snapshot = await db.collection('users/${auth.user!.uid}/bookmarks/').get();
 
       for (var doc in snapshot.docs) {
-        Currency currency = CurrencyRepository.table.firstWhere((currency) => currency.acronym == doc.get('acronym'));
+        Currency? currency = currencyRepository.table.firstWhereOrNull((currency) => currency.acronym == doc.get('acronym'));
+
+        if (currency == null) {
+          continue;
+        }
+        
         _list.add(currency);
         notifyListeners();
       }

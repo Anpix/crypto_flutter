@@ -43,7 +43,7 @@ class _CurrencyCardState extends State<CurrencyCard> {
           padding: const EdgeInsets.only(top: 20, bottom: 20, left: 20),
           child: Row(
             children: [
-              Image.asset(
+              Image.network(
                 widget.currency.icon,
                 height: 40,
               ),

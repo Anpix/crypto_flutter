@@ -7,6 +7,11 @@ class DB {
   static final DB instance = DB._();
   static Database? _database;
 
+  static String tableAccount = 'account';
+  static String tableWallet = 'wallet';
+  static String tableHistory = 'history';
+  static String tableCurrencies = 'currencies';
+
   get database async {
     if (_database != null) return _database;
 
@@ -25,18 +30,19 @@ class DB {
     await db.execute(_account);
     await db.execute(_wallet);
     await db.execute(_history);
-    await db.insert('account', {'balance': 0});
+    //await db.execute(_currencies);
+    await db.insert(tableAccount, {'balance': 0});
   }
 
   String get _account => '''
-    CREATE TABLE account (
+    CREATE TABLE $tableAccount (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       balance REAL
     );
   ''';
-  
+
   String get _wallet => '''
-    CREATE TABLE wallet (
+    CREATE TABLE $tableWallet (
       acronym TEXT PRIMARY KEY,
       currency TEXT,
       amount TEXT
@@ -44,7 +50,7 @@ class DB {
   ''';
 
   String get _history => '''
-    CREATE TABLE history (
+    CREATE TABLE $tableHistory (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       operation_date INT,
       operation_type TEXT,
